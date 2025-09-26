@@ -26,8 +26,8 @@ You can install the development version of nmfgenr like so:
 
 ``` {r installation}
 library(devtools)
-install_github("MartaPelizzola/nmfgenr",force = TRUE, build_vignettes = TRUE)
-library(nmfgenr)
+#install_github("MartaPelizzola/nmfgenr",force = TRUE, build_vignettes = TRUE)
+#library(nmfgenr)
 ```
 
 ## Example
