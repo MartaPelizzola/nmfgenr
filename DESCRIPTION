@@ -1,0 +1,19 @@
+Package: nmfgenr
+Title: General NMF closed form updates under different divergences.
+Version: 0.0.0.9000
+Authors@R: c(
+    person("Marta", "Pelizzola", , "marta@math.au.dk", role = c("aut", "cre"), comment = c(ORCID = "")),
+    person("Elisabeth", "James", , "elijam@math.au.dk", role = "aut")
+    )
+Maintainer: Marta Pelizzola <marta@math.au.dk>
+Description: General NMF and convex NMF functions with closed form updates derived via MM-algorithms under the Tweedie, Negative Binomial and Laplace loss functions. 'nmfgenr' can be used to estimate traditional and convex non-negative matrix factorizations with given rank and Tweedie (including Normal and Poisson), Negative Binomial and Laplace loss functions. The package includes functions for estimating the matrix factorization and for calculating the divergence under the considered loss functions.
+License: GPL-3
+Imports: Rcpp
+LinkingTo: Rcpp, RcppArmadillo
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.3
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
