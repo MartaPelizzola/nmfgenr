@@ -1,5 +1,5 @@
 #include <RcppArmadillo.h>
-#include <cmath>        
+#include <cmath>
 #include <tuple>
 #include <iostream>
 #include "Dev_functions.h"
@@ -12,28 +12,51 @@ using namespace Rcpp;
 List nmfLh(arma::mat data, arma::mat wmat, arma::mat hmat, int iter){
   arma::mat estimate;
   arma::mat absdiff;
-  
+
   for (int i = 0; i < iter; i++){
     estimate = wmat * hmat;
-    estimate.transform( [](double val) {return (val < 1e-16) ? 1e-16 : val; } );
+    estimate.transform( [](double val) {return (val < 1e-5) ? 1e-5 : val; } );
     absdiff = arma::abs(data-estimate);
-    absdiff.transform( [](double val) {return (val < 1e-16) ? 1e-16 : val; } );
-    
-    wmat = wmat % (((data/absdiff) * arma::trans(hmat))/((estimate/absdiff) * arma::trans(hmat)));
-    wmat.transform( [](double val) {return (val < 1e-16) ? 1e-16 : val; } );
-    
-    estimate = wmat * hmat;
-    
-    estimate.transform( [](double val) {return (val < 1e-16) ? 1e-16 : val; } );
-    
-    absdiff = arma::abs(data-estimate);
-    absdiff.transform( [](double val) {return (val < 1e-16) ? 1e-16 : val; } );
-    
-    hmat = hmat % ((arma::trans(wmat) * (data/absdiff))/(arma::trans(wmat) * (estimate/absdiff)));
-    hmat.transform( [](double val) {return (val < 1e-16) ? 1e-16 : val; } );
-    
+    if (i == iter-1){
+      Rcout << wmat(15,0);
+      Rcout << "  ";
+      Rcout << wmat(15,1);
+      Rcout << "  ";
+      Rcout << hmat(0,82);
+      Rcout << "  ";
+      Rcout << hmat(1,82);
+      Rcout << "  ";
+      Rcout << std::setprecision (15) << absdiff(15,82) << std::endl;;
+      Rcout << "  ";
     }
-  
+    absdiff.transform( [](double val) {return (val < 1e-5) ? 1e-5 : val; } );
+
+    wmat = wmat % (((data/absdiff) * arma::trans(hmat))/((estimate/absdiff) * arma::trans(hmat)));
+    wmat.transform( [](double val) {return (val < 1e-5) ? 1e-5 : val; } );
+
+    estimate = wmat * hmat;
+
+    estimate.transform( [](double val) {return (val < 1e-5) ? 1e-5 : val; } );
+
+    absdiff = arma::abs(data-estimate);
+    if (i == iter-1){
+      Rcout << wmat(15,0);
+      Rcout << "  ";
+      Rcout << wmat(15,1);
+      Rcout << "  ";
+      Rcout << hmat(0,82);
+      Rcout << "  ";
+      Rcout << hmat(1,82);
+      Rcout << "  ";
+      Rcout << std::setprecision (15) << absdiff(15,82) << std::endl;;
+    }
+    absdiff.transform( [](double val) {return (val < 1e-5) ? 1e-5 : val; } );
+
+    hmat = hmat % ((arma::trans(wmat) * (data/absdiff))/(arma::trans(wmat) * (estimate/absdiff)));
+    hmat.transform( [](double val) {return (val < 1e-5) ? 1e-5 : val; } );
+
+    }
+
   List output = List::create(Named("W") = wmat,
                              Named("H") = hmat);
   return output;
@@ -47,7 +70,7 @@ List nmfall(arma::mat data, int noSignatures, std::string distribution, std::str
   arma::mat w1mat0 = Rcpp::NumericMatrix::create();
   arma::mat w2mat0 = Rcpp::NumericMatrix::create();
   double errorValue = R_NaN;
-  
+
   if (distribution == "NegativeBinomial"){
     res = NBupdates(data, noSignatures, alpha, method, smallIter, 0, wmat, hmat, w1mat, w2mat);
   } else if (distribution == "Tweedie") {
@@ -75,7 +98,7 @@ List nmfall(arma::mat data, int noSignatures, std::string distribution, std::str
       res = Lupdates(data, noSignatures, method, smallIter, 0, wmat, hmat, w1mat, w2mat);
     }
     auto errorNew = std::get<2>(res);
-    
+
     if(errorNew < errorValue){
       errorValue = errorNew;
       if (method == "traditional"){
@@ -101,16 +124,16 @@ List nmfall(arma::mat data, int noSignatures, std::string distribution, std::str
   } else if (distribution == "Laplace"){
     res = Lupdates(data, noSignatures, method, maxiter, tolerance, wmat0, hmat0, w1mat0, w2mat0);
   }
-  
+
   if (method == "traditional"){
     wmat = std::get<0>(res);
     hmat = std::get<1>(res);
     errorValue = std::get<2>(res);
-    
+
     arma::colvec rsum = sum(hmat,1);
     wmat = wmat.each_row() % arma::trans(rsum);
     hmat = hmat.each_col() / rsum;
-    
+
     List output = List::create(Named("W") = wmat,
                                Named("H") = hmat,
                                Named("cost") = errorValue);
@@ -119,16 +142,16 @@ List nmfall(arma::mat data, int noSignatures, std::string distribution, std::str
     w1mat = std::get<0>(res);
     w2mat = std::get<1>(res);
     errorValue = std::get<2>(res);
-    
+
     arma::mat hmat = arma::trans(w1mat) * data;
     arma::colvec rsum = sum(hmat,1);
     w2mat = w2mat.each_col() % rsum;
     w1mat = w1mat.each_row() / arma::trans(rsum);
-    
+
     List output = List::create(Named("W1") = w1mat,
                                Named("W2") = w2mat,
                                Named("cost") = errorValue);
     return output;
   }
-  
+
 }
