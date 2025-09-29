@@ -19,11 +19,11 @@
 #' @export
 #'
 #' @examples
-nmfgen <- function(data, rank, distribution = c("NegativeBinomial", "Tweedie", "Laplace"), method = c("traditional", "convex"), alpha, pwr, wmat, hmat, w1mat, w2mat, maxiter, tolerance, initial, smallIter){
+nmfgen <- function(data, rank, distribution = c("NegativeBinomial", "Tweedie", "Laplace"), method = c("traditional", "convex"), alpha = NULL, pwr = NULL, wmat = NULL, hmat = NULL, w1mat = NULL, w2mat = NULL, maxiter = NULL, tolerance = NULL, initial = NULL, smallIter = NULL){
   if (is.null(data) | length(data)!=nrow(data)*ncol(data)){
     stop("data must be a matrix.")
   }
-  if (is.null(rank) | !is.integer(rank) | length(rank)>1){
+  if (is.null(rank) | length(rank)>1){
     stop("rank must be provided and needs to be a single integer number.")
   }
   if (method == "NegativeBinomial" & is.null(alpha)){
@@ -32,17 +32,25 @@ nmfgen <- function(data, rank, distribution = c("NegativeBinomial", "Tweedie", "
   if (method == "Tweedie" & is.null(pwr)){
     pwr <- tweedie.profile()
   }
-  if (!is.null(wmat) & (nrow(wmat)!=nrow(data) | ncol(wmat)!=rank)){
+  if (!is.null(wmat)){
+    if ((nrow(wmat)!=nrow(data) | ncol(wmat)!=rank)){
     stop("For traditional NMF the W matrix needs to have the same number of rows as the data matrix and 'rank' columns.")
+    }
   }
-  if (!is.null(hmat) & (nrow(hmat)!=rank | ncol(hmat)!=ncol(data))){
+  if (!is.null(hmat)){
+    if ((nrow(hmat)!=rank | ncol(hmat)!=ncol(data))){
     stop("For traditional NMF the H matrix needs to have 'rank' rows and the same number of columns as the data matrix.")
+    }
   }
-  if (!is.null(w1mat) & (nrow(w1mat)!=nrow(data) | ncol(w1mat)!=rank)){
+  if (!is.null(w1mat)){
+    if ((nrow(w1mat)!=nrow(data) | ncol(w1mat)!=rank)){
     stop("For traditional NMF the W1 matrix needs to have the same number of rows as the data matrix and 'rank' columns.")
+    }
   }
-  if (!is.null(w2mat) & (nrow(w2mat)!=nrow(data) | ncol(w2mat)!=rank)){
+  if (!is.null(w2mat)){
+    if ((nrow(w2mat)!=nrow(data) | ncol(w2mat)!=rank)){
     stop("For traditional NMF the W2 matrix needs to have the same number of rows as the data matrix and 'rank' columns.")
+    }
   }
   if (is.null(maxiter)){
     maxiter = 100000
