@@ -11,20 +11,6 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
-// nmfLh
-List nmfLh(arma::mat data, arma::mat wmat, arma::mat hmat, int iter);
-RcppExport SEXP _nmfgenr_nmfLh(SEXP dataSEXP, SEXP wmatSEXP, SEXP hmatSEXP, SEXP iterSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::mat >::type data(dataSEXP);
-    Rcpp::traits::input_parameter< arma::mat >::type wmat(wmatSEXP);
-    Rcpp::traits::input_parameter< arma::mat >::type hmat(hmatSEXP);
-    Rcpp::traits::input_parameter< int >::type iter(iterSEXP);
-    rcpp_result_gen = Rcpp::wrap(nmfLh(data, wmat, hmat, iter));
-    return rcpp_result_gen;
-END_RCPP
-}
 // nmfall
 List nmfall(arma::mat data, int noSignatures, std::string distribution, std::string method, arma::colvec alpha, double pwr, arma::mat wmat, arma::mat hmat, arma::mat w1mat, arma::mat w2mat, int maxiter, double tolerance, int initial, int smallIter);
 RcppExport SEXP _nmfgenr_nmfall(SEXP dataSEXP, SEXP noSignaturesSEXP, SEXP distributionSEXP, SEXP methodSEXP, SEXP alphaSEXP, SEXP pwrSEXP, SEXP wmatSEXP, SEXP hmatSEXP, SEXP w1matSEXP, SEXP w2matSEXP, SEXP maxiterSEXP, SEXP toleranceSEXP, SEXP initialSEXP, SEXP smallIterSEXP) {
@@ -51,7 +37,6 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_nmfgenr_nmfLh", (DL_FUNC) &_nmfgenr_nmfLh, 4},
     {"_nmfgenr_nmfall", (DL_FUNC) &_nmfgenr_nmfall, 14},
     {NULL, NULL, 0}
 };

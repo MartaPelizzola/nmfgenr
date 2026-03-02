@@ -50,19 +50,6 @@ nbdev <- function(y, mu, alpha_n){
   return(sum(r))
 }
 
-#' L1 divergence.
-#'
-#' @param y A vector of observations.
-#' @param mu A vector of estimates.
-#'
-#' @returns The L1 divergence between a vector of observations y and one of estimates mu.
-#' @export
-#'
-#' @examples
-l1dev <- function(y, mu){
-  r <- abs(y - mu)
-  return(sum(r))
-}
 
 #' Generalized Kullback-Leibler divergence.
 #'

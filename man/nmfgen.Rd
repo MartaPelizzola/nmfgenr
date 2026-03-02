@@ -9,16 +9,17 @@ nmfgen(
   rank,
   distribution = c("NegativeBinomial", "Tweedie", "Laplace"),
   method = c("traditional", "convex"),
-  alpha,
-  pwr,
-  wmat,
-  hmat,
-  w1mat,
-  w2mat,
-  maxiter,
-  tolerance,
-  initial,
-  smallIter
+  alpha = NULL,
+  pwr = NULL,
+  power.vector = NULL,
+  wmat = NULL,
+  hmat = NULL,
+  w1mat = NULL,
+  w2mat = NULL,
+  maxiter = NULL,
+  tolerance = NULL,
+  initial = NULL,
+  smallIter = NULL
 )
 }
 \arguments{
@@ -26,7 +27,7 @@ nmfgen(
 
 \item{rank}{The rank for the factorization.}
 
-\item{distribution}{The underlying model assumption for the factorization. Can assume the following values: "NegativeBinomial", "Tweedie", or "Laplace".}
+\item{distribution}{The underlying model assumption for the factorization. Can assume the following values: "NegativeBinomial" or "Tweedie".}
 
 \item{method}{The chosen method for the factorization. Can be either "traditional" or "convex".}
 

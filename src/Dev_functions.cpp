@@ -1,5 +1,5 @@
 #include <RcppArmadillo.h>
-#include <cmath>        
+#include <cmath>
 #include <tuple>
 #include <iostream>
 using namespace Rcpp;
@@ -23,7 +23,7 @@ double gkldev(arma::colvec y, arma::colvec mu) {
 double unitdev(arma::colvec y, arma::colvec mu, double pwr){
   int ySize = y.size();
   double sum = 0;
-  
+
   for (int i=0; i<ySize; i++) {
     if (y[i] > 0) {
       if (pwr==2) {
@@ -47,15 +47,6 @@ double nbdev(arma::colvec y, arma::colvec mu, arma::colvec alpha){
     } else {
       sum += y[i] * (log(y[i]) - log(mu[i])) - (alpha[i] + y[i]) * (log(alpha[i] + y[i]) - log(alpha[i] + mu[i]));
     }
-  }
-  return sum;
-}
-
-double l1dev(arma::colvec y, arma::colvec mu){
-  int ySize = y.size();
-  double sum = 0;
-  for (int i=0; i<ySize; i++) {
-    sum += std::abs(y[i] - mu[i]);
   }
   return sum;
 }

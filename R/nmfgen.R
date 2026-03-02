@@ -2,7 +2,7 @@
 #'
 #' @param data A matrix of count data.
 #' @param rank The rank for the factorization.
-#' @param distribution The underlying model assumption for the factorization. Can assume the following values: "NegativeBinomial", "Tweedie", or "Laplace".
+#' @param distribution The underlying model assumption for the factorization. Can assume the following values: "NegativeBinomial" or "Tweedie".
 #' @param method The chosen method for the factorization. Can be either "traditional" or "convex".
 #' @param alpha Dispersion parameter for the Negative Binomial matrix factorization.
 #' @param pwr Power parameter for the Tweedie matrix factorization.
@@ -19,7 +19,7 @@
 #' @export
 #'
 #' @examples
-nmfgen <- function(data, rank, distribution = c("NegativeBinomial", "Tweedie", "Laplace"), method = c("traditional", "convex"), alpha = NULL, pwr = NULL, wmat = NULL, hmat = NULL, w1mat = NULL, w2mat = NULL, maxiter = NULL, tolerance = NULL, initial = NULL, smallIter = NULL){
+nmfgen <- function(data, rank, distribution = c("NegativeBinomial", "Tweedie", "Laplace"), method = c("traditional", "convex"), alpha = NULL, pwr = NULL, power.vector = NULL, wmat = NULL, hmat = NULL, w1mat = NULL, w2mat = NULL, maxiter = NULL, tolerance = NULL, initial = NULL, smallIter = NULL){
   if (is.null(data) | length(data)!=nrow(data)*ncol(data)){
     stop("data must be a matrix.")
   }
@@ -30,7 +30,11 @@ nmfgen <- function(data, rank, distribution = c("NegativeBinomial", "Tweedie", "
     alpha <- convex_alphaNR(data, rank, TRUE)
   }
   if (method == "Tweedie" & is.null(pwr)){
-    pwr <- tweedie.profile()
+    if (is.null(power.vector)){
+      stop("Values for power.vector or pwr (Tweedie power) need to provided.")
+    } else{
+      pwr <- powertweedie(data, rank, method, power.vector)
+    }
   }
   if (!is.null(wmat)){
     if ((nrow(wmat)!=nrow(data) | ncol(wmat)!=rank)){
@@ -85,9 +89,6 @@ nmfgen <- function(data, rank, distribution = c("NegativeBinomial", "Tweedie", "
   }
   if (distribution == "Tweedie"){
     res <- nmfall(data, rank, distribution, method, NULL, pwr, wmat, hmat, w1mat, w2mat, maxiter, tolerance, initial, smallIter)
-  }
-  if (distribution == "Laplace"){
-    res <- nmfall(data, rank, distribution, method, NULL, NULL, wmat, hmat, w1mat, w2mat, maxiter, tolerance, initial, smallIter)
   }
   return(res)
 }

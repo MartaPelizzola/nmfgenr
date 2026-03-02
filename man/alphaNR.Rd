@@ -2,7 +2,7 @@
 % Please edit documentation in R/TalphaNR.R
 \name{alphaNR}
 \alias{alphaNR}
-\title{Estimation of the overdispersion parameter for Negative Binomial non-negative matrix factorization from the SigMoS package: https://github.com/MartaPelizzola/SigMoS/tree/master}
+\title{Estimation of the overdispersion parameter for Negative Binomial non-negative matrix factorization. This function is copied from the package: https://github.com/MartaPelizzola/SigMoS/tree/master}
 \usage{
 alphaNR(data, k = NULL, patient_specific = FALSE)
 }
