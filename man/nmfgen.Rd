@@ -7,7 +7,7 @@
 nmfgen(
   data,
   rank,
-  distribution = c("NegativeBinomial", "Tweedie", "Laplace"),
+  distribution = c("NegativeBinomial", "Tweedie"),
   method = c("traditional", "convex"),
   alpha = NULL,
   pwr = NULL,

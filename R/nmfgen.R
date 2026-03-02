@@ -19,21 +19,29 @@
 #' @export
 #'
 #' @examples
-nmfgen <- function(data, rank, distribution = c("NegativeBinomial", "Tweedie", "Laplace"), method = c("traditional", "convex"), alpha = NULL, pwr = NULL, power.vector = NULL, wmat = NULL, hmat = NULL, w1mat = NULL, w2mat = NULL, maxiter = NULL, tolerance = NULL, initial = NULL, smallIter = NULL){
+nmfgen <- function(data, rank, distribution = c("NegativeBinomial", "Tweedie"), method = c("traditional", "convex"), alpha = NULL, pwr = NULL, power.vector = NULL, wmat = NULL, hmat = NULL, w1mat = NULL, w2mat = NULL, maxiter = NULL, tolerance = NULL, initial = NULL, smallIter = NULL){
   if (is.null(data) | length(data)!=nrow(data)*ncol(data)){
     stop("data must be a matrix.")
   }
   if (is.null(rank) | length(rank)>1){
     stop("rank must be provided and needs to be a single integer number.")
   }
-  if (method == "NegativeBinomial" & is.null(alpha)){
-    alpha <- convex_alphaNR(data, rank, TRUE)
+  if (distribution == "NegativeBinomial" & is.null(alpha)){
+    if (method == "traditional"){
+      alpha <- alphaNR(data, rank, TRUE)
+    } else {
+      alpha <- convex_alphaNR(data, rank, TRUE)
+    }
   }
-  if (method == "Tweedie" & is.null(pwr)){
+  if (distribution == "NegativeBinomial" & length(alpha)==1){
+    alpha <- rep(alpha,nrow(data))
+  }
+  if (distribution == "Tweedie" & is.null(pwr)){
     if (is.null(power.vector)){
       stop("Values for power.vector or pwr (Tweedie power) need to provided.")
     } else{
-      pwr <- powertweedie(data, rank, method, power.vector)
+      pwr_res <- powertweedie(data, rank, method, power.vector)
+      pwr <- pwr_res$best.power
     }
   }
   if (!is.null(wmat)){
@@ -85,10 +93,10 @@ nmfgen <- function(data, rank, distribution = c("NegativeBinomial", "Tweedie", "
     w2mat = matrix(numeric(0))
   }
   if (distribution == "NegativeBinomial"){
-    res <- nmfall(data, rank, distribution, method, alpha, NULL, wmat, hmat, w1mat, w2mat, maxiter, tolerance, initial, smallIter)
+    res <- nmfall(data, rank, distribution, method, alpha, 0, wmat, hmat, w1mat, w2mat, maxiter, tolerance, initial, smallIter)
   }
   if (distribution == "Tweedie"){
-    res <- nmfall(data, rank, distribution, method, NULL, pwr, wmat, hmat, w1mat, w2mat, maxiter, tolerance, initial, smallIter)
+    res <- nmfall(data, rank, distribution, method, 0, pwr, wmat, hmat, w1mat, w2mat, maxiter, tolerance, initial, smallIter)
   }
   return(res)
 }

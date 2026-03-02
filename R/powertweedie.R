@@ -6,6 +6,11 @@
 #' @param power.vector A numeric vector with values between 1 and 2 or equal to 0.
 #'
 #' @returns A list with the estimated power parameter of the Tweedie distribution and the full results from the estimation procedure.
+#'
+#' @import tweedie
+#' @import statmod
+#' @import mgcv
+#'
 #' @export
 #'
 #' @examples
@@ -27,7 +32,7 @@ powertweedie <- function(data,  rank, method = c("traditional", "convex"), power
     if(method == "traditional"){
       nmf <- nmfgen(data, rank , "Tweedie", method = "traditional", pwr = power.vector[i])
       estimate <- nmf$W %*% nmf$H
-    }else if(nmfmodel %in% c("Convex", "convex", "C")){
+    }else if(method == "convex"){
       nmf <- nmfgen(data, rank, "Tweedie", method = "convex", pwr = power.vector[i])
       estimate <- t(nmf$W2) %*% t(nmf$W1) %*% data
     }
@@ -54,6 +59,6 @@ powertweedie <- function(data,  rank, method = c("traditional", "convex"), power
   results <- list(best.power = power.vector[best],
                   best.phi = phi[best],
                   best.loglik = loglik[best],
-                  more = fullresults)
+                  fullresults = fullresults)
   return(results)
 }
