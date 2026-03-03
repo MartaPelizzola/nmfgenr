@@ -11,8 +11,8 @@ The goal of nmfgenr is to provide an easy to use tool to perform
 traditional and convex non-negative matrix factorization with a wide
 range of underlying distributions. This package provides a fast
 implementation of updates derived via MM algorithms for traditional and
-convex NMF under the following distributions: \* Tweedie (with its
-special cases Normal and Poisson) \* Negative Binomial \* Laplace.
+convex NMF under the following distributions: 1) Tweedie (with its
+special cases Normal and Poisson); 2) Negative Binomial.
 
 ## Installation
 
